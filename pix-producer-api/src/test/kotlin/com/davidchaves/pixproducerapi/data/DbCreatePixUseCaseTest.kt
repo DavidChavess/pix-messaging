@@ -28,7 +28,7 @@ class DbCreatePixUseCaseTest {
     private lateinit var dbCreatePix: DbCreatePixUseCase
 
     @Test
-    fun shouldCallPixRepositoryOnSuccess() {
+    fun shouldCallCreatePixRepositoryOnSuccess() {
         val localDateTime = LocalDateTime.now()
 
         val pixDto =
