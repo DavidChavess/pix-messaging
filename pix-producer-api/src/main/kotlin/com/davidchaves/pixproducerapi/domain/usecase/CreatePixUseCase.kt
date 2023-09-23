@@ -15,8 +15,8 @@ data class PixDto(
     val targetKey: String,
     val sourceKey: String,
     val value: BigDecimal,
-    val transferDate: LocalDateTime,
-    val status: PixDtoStatus,
+    val transferDate: LocalDateTime = LocalDateTime.now(),
+    val status: PixDtoStatus = PixDtoStatus.PENDING,
 )
 
 interface CreatePixUseCase {
