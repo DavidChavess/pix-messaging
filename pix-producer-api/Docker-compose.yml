@@ -15,6 +15,35 @@ services:
       - "5432:5432"
     network_mode: host
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: pix-zookeeper
+    volumes:
+      - pix-zoo-data:/var/lib/zookeeper/data
+      - pix-zoo-log:/var/lib/zookeeper/log
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    hostname: pix-kafka
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: pix-kafka
+    volumes:
+      - pix-kafka-data:/var/lib/kafka/data
+      - pix-kafka-log:/var/lib/kafka/log
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:9092,INTERNAL://kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
   pix-producer-api:
     build: .
     image: pix-producer-api
@@ -26,3 +55,7 @@ services:
 
 volumes:
   pix-db:
+  pix-kafka-data:
+  pix-kafka-log:
+  pix-zoo-data:
+  pix-zoo-log:
