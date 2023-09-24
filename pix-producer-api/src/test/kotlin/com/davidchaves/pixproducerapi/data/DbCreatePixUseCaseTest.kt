@@ -1,6 +1,7 @@
 package com.davidchaves.pixproducerapi.data
 
 import com.davidchaves.pixproducerapi.data.protocols.*
+import com.davidchaves.pixproducerapi.data.util.CreatePixMapper
 import com.davidchaves.pixproducerapi.domain.model.Pix
 import com.davidchaves.pixproducerapi.domain.model.Status
 import com.davidchaves.pixproducerapi.domain.usecase.PixDto
@@ -11,9 +12,9 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verifyNoInteractions
+import org.mockito.BDDMockito.verify
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -26,6 +27,9 @@ class DbCreatePixUseCaseTest {
 
     @Mock
     private lateinit var pixSendMessage: PixSendMessage
+
+    @Mock
+    private lateinit var createPixMapper: CreatePixMapper
 
     @InjectMocks
     private lateinit var dbCreatePix: DbCreatePixUseCase
@@ -78,6 +82,10 @@ class DbCreatePixUseCaseTest {
         val message =
                 PixMessage("id", "123", "321", BigDecimal("1.99"), localDateTime, PixMessageStatus.PENDING)
 
+        given(createPixMapper.pixDtoToCreatePix(pixDto)).willReturn(createPix)
+        given(createPixMapper.pixDtoToPixMessage(pixDto)).willReturn(message)
+        given(createPixMapper.pixMessageToPix(message)).willReturn(pix)
+
         given(createPixRepository.add(createPix)).willReturn(createPix)
         given(pixSendMessage.send(message)).willReturn(message)
 
@@ -86,5 +94,9 @@ class DbCreatePixUseCaseTest {
         assertEquals(pix, result)
         verify(createPixRepository).add(createPix);
         verify(pixSendMessage).send(message);
+
+        verify(createPixMapper).pixDtoToCreatePix(pixDto)
+        verify(createPixMapper).pixDtoToPixMessage(pixDto)
+        verify(createPixMapper).pixMessageToPix(message)
     }
 }

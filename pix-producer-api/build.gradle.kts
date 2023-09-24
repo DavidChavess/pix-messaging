@@ -1,3 +1,5 @@
+@file:Suppress("COMPATIBILITY_WARNING")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,6 +8,7 @@ plugins {
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
 	id("org.jetbrains.kotlin.plugin.noarg") version "1.8.22"
+	kotlin("kapt") version "1.5.10"
 }
 
 group = "com.davidchaves"
@@ -37,9 +40,23 @@ dependencies {
 	// kafka
 	implementation("org.springframework.kafka:spring-kafka")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
+
+	// mapStruct
+	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 }
 
 apply { plugin("kotlin-jpa") }
+
+
+kapt {
+	arguments {
+		arg("mapstruct.defaultComponentModel", "spring")
+		arg("-Amapstruct.suppressGeneratorTimestamp","true")
+		arg("-Amapstruct.suppressGeneratorVersionInfoComment","true")
+		arg("-Amapstruct.verbose","true")
+	}
+}
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
