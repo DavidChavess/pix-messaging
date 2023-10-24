@@ -11,5 +11,5 @@ data class PixMessage(
 )
 
 interface PixValidator {
-    suspend fun process(pixMessage: PixMessage)
+    fun process(pixMessage: PixMessage)
 }

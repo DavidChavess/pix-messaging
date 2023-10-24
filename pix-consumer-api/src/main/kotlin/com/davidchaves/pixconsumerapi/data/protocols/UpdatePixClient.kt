@@ -13,5 +13,5 @@ data class PixDto(
 )
 
 interface UpdatePixClient {
-    suspend fun update(pixDto: PixDto)
+    fun update(pixDto: PixDto)
 }

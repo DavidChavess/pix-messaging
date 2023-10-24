@@ -14,7 +14,7 @@ class PixValidatorImpl(
     private val updatePixClient: UpdatePixClient
 ) : PixValidator {
 
-     override suspend fun process(pixMessage: PixMessage) {
+     override fun process(pixMessage: PixMessage) {
         println("Verificando se a chave pix é valida, sourceKey = ${pixMessage.sourceKey}, targetKey = ${pixMessage.targetKey}")
         try {
             keyValidatorClient.valid(pixMessage.sourceKey, pixMessage.targetKey)

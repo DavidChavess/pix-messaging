@@ -9,13 +9,13 @@ class PixClientImpl(
     private val pixRetrofitClient: PixRetrofitClient
 ) : PixClient {
 
-    override suspend fun valid(sourceKey: String, targetKey: String) {
-        val call = pixRetrofitClient.valid(sourceKey, targetKey)
+    override fun valid(sourceKey: String, targetKey: String) {
+        val call = pixRetrofitClient.valid(sourceKey, targetKey).execute()
         handleError(call)
     }
 
-    override suspend fun update(pixDto: PixDto) {
-        val call = pixRetrofitClient.update(pixDto)
+    override fun update(pixDto: PixDto) {
+        val call = pixRetrofitClient.update(pixDto).execute()
         handleError(call)
     }
 
