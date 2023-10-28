@@ -14,8 +14,10 @@ class DbCreatePixUseCase(
 
     override fun create(pixDto: PixDto) =
             createPixMapper.pixDtoToCreatePix(pixDto)
-                    .run(createPixRepository::add)
+                    .apply { println("Salvando pix no banco, pix = $pixDto") }
+                    .run( createPixRepository::add)
                     .run { createPixMapper.pixDtoToPixMessage(pixDto) }
+                    .apply { println("Pix salvo com sucesso, enviando mensagem para a fila, PIX_NEW_ORDER, pix = $pixDto") }
                     .run(pixSendMessage::send)
                     .run(createPixMapper::pixMessageToPix)
 }
