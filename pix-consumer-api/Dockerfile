@@ -6,6 +6,7 @@ RUN apk update --no-cache &&\
     apk upgrade --no-cache &&\
     apk add --no-cache openjdk17-jre
 
-COPY /build/libs/pix-consumer-api-0.0.1-SNAPSHOT.jar /java-17/src/app/
+ARG JAR_FILE=build/libs/*jar
+COPY ${JAR_FILE} app.jar
 
-CMD java -jar /java-17/src/app/pix-consumer-api-0.0.1-SNAPSHOT.jar
+CMD java -jar /java-17/src/app/app.jar
