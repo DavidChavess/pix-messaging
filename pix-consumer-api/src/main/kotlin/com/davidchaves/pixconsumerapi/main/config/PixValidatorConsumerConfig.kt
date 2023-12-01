@@ -55,6 +55,8 @@ class PixValidatorConsumerConfig {
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java.name
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = JsonDeserializer::class.java.name
         props[JsonDeserializer.TRUSTED_PACKAGES] = "*"
+        props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
+
         return DefaultKafkaConsumerFactory(props, StringDeserializer(), JsonDeserializer(PixMessage::class.java, false))
     }
 
@@ -64,7 +66,7 @@ class PixValidatorConsumerConfig {
         val listenerContainerFactory = ConcurrentKafkaListenerContainerFactory<String, PixMessage>()
         // listenerContainerFactory.setConcurrency(3)
         listenerContainerFactory.consumerFactory = consumerFactory
-        listenerContainerFactory.containerProperties.ackMode = ContainerProperties.AckMode.RECORD
+        listenerContainerFactory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
         return listenerContainerFactory
     }
 }
