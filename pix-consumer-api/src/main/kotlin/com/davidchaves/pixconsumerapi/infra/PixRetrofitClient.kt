@@ -1,6 +1,6 @@
 package com.davidchaves.pixconsumerapi.infra
 
-import com.davidchaves.pixconsumerapi.data.protocols.PixDto
+import com.davidchaves.pixconsumerapi.data.protocols.UpdatePixDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -12,5 +12,5 @@ interface PixRetrofitClient {
     suspend fun valid(@Query("sourceKey") sourceKey: String, @Query("targetKey") targetKey: String): Response<Unit>
 
     @POST("/pix")
-    suspend fun update(@Body pixDto: PixDto): Response<Unit>
+    suspend fun update(@Body updatePixDto: UpdatePixDto): Response<Unit>
 }

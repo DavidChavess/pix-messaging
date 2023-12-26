@@ -4,7 +4,7 @@ import java.math.BigDecimal
 
 enum class UpdatePixStatus { PENDING, FINISHED, ERROR }
 
-data class PixDto(
+data class UpdatePixDto(
     val id: String,
     val targetKey: String,
     val sourceKey: String,
@@ -13,5 +13,5 @@ data class PixDto(
 )
 
 interface UpdatePixClient {
-    suspend fun update(pixDto: PixDto)
+    suspend fun update(updatePixDto: UpdatePixDto)
 }

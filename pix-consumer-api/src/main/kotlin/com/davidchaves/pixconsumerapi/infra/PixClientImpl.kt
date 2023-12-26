@@ -1,7 +1,7 @@
 package com.davidchaves.pixconsumerapi.infra
 
 import com.davidchaves.pixconsumerapi.data.protocols.PixClient
-import com.davidchaves.pixconsumerapi.data.protocols.PixDto
+import com.davidchaves.pixconsumerapi.data.protocols.UpdatePixDto
 import com.davidchaves.pixconsumerapi.exceptions.PixClientException
 import retrofit2.Response
 
@@ -14,8 +14,8 @@ class PixClientImpl(
         handleError(call)
     }
 
-    override suspend fun update(pixDto: PixDto) {
-        val call = pixRetrofitClient.update(pixDto)
+    override suspend fun update(updatePixDto: UpdatePixDto) {
+        val call = pixRetrofitClient.update(updatePixDto)
         handleError(call)
     }
 

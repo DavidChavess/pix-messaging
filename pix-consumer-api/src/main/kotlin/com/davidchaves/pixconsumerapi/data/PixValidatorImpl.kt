@@ -1,7 +1,7 @@
 package com.davidchaves.pixconsumerapi.data
 
 import com.davidchaves.pixconsumerapi.data.protocols.KeyValidatorClient
-import com.davidchaves.pixconsumerapi.data.protocols.PixDto
+import com.davidchaves.pixconsumerapi.data.protocols.UpdatePixDto
 import com.davidchaves.pixconsumerapi.data.protocols.UpdatePixClient
 import com.davidchaves.pixconsumerapi.data.protocols.UpdatePixStatus
 import com.davidchaves.pixconsumerapi.domain.PixMessage
@@ -14,7 +14,7 @@ class PixValidatorImpl(
     private val updatePixClient: UpdatePixClient
 ) : PixValidator {
 
-     override suspend fun process(pixMessage: PixMessage) {
+    override suspend fun process(pixMessage: PixMessage) {
         println("Verificando se a chave pix é valida, sourceKey = ${pixMessage.sourceKey}, targetKey = ${pixMessage.targetKey}")
         try {
             keyValidatorClient.valid(pixMessage.sourceKey, pixMessage.targetKey)
@@ -24,12 +24,11 @@ class PixValidatorImpl(
         } catch (ex: PixClientException) {
             println("Não foi possivel realizar pix, mudando status para ERROR para ser inserido na fila de erros")
             updatePixClient.update(toUpdatePix(pixMessage, UpdatePixStatus.ERROR))
-            ex.printStackTrace()
-            throw ex
+            println("Erro ${ex.message}")
         }
     }
 
-    private fun toUpdatePix(pixMessage: PixMessage, status: UpdatePixStatus) = PixDto(
+    private fun toUpdatePix(pixMessage: PixMessage, status: UpdatePixStatus) = UpdatePixDto(
         pixMessage.id,
         pixMessage.targetKey,
         pixMessage.sourceKey,

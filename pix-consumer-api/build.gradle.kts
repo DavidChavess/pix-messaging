@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.springframework.kafka:spring-kafka")
+	implementation("org.apache.kafka:kafka-streams")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
