@@ -1,0 +1,15 @@
+{
+  "name": "PostgresConnectorConnector_0",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "topic.prefix": "pix",
+    "database.hostname": "pix-db",
+    "database.port": "5432",
+    "database.user": "pix-admin",
+    "database.password": "admin@1234",
+    "database.dbname": "pix-db",
+    "plugin.name": "decoderbufs",
+    "database.sslmode": "disable",
+    "table.include.list": "public.pix"
+  }
+}

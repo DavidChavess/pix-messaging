@@ -54,23 +54,23 @@ services:
 #    volumes:
 #      - /rabbit/data:/var/lib/rabbitmq
 #
-  pix-producer-api:
-    build: ./pix-producer-api/.
-    image: pix-producer-api
-    container_name: pix-producer-api
-    depends_on:
-      - pix-db
-      - zookeeper
-      - kafka
-    network_mode: host
-
-  pix-consumer-api:
-    build: ./pix-consumer-api/.
-    image: pix-consumer-api
-    container_name: pix-consumer-api
-    depends_on:
-      - pix-producer-api
-    network_mode: host
+#  pix-producer-api:
+#    build: ./pix-producer-api/.
+#    image: pix-producer-api
+#    container_name: pix-producer-api
+#    depends_on:
+#      - pix-db
+#      - zookeeper
+#      - kafka
+#    network_mode: host
+#
+#  pix-consumer-api:
+#    build: ./pix-consumer-api/.
+#    image: pix-consumer-api
+#    container_name: pix-consumer-api
+#    depends_on:
+#      - pix-producer-api
+#    network_mode: host
 
 volumes:
   pix-db:
