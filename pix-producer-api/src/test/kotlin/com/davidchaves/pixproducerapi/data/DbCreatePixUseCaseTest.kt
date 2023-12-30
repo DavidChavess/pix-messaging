@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.BDDMockito.verify
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -26,77 +25,40 @@ class DbCreatePixUseCaseTest {
     private lateinit var createPixRepository: CreatePixRepository
 
     @Mock
-    private lateinit var pixSendMessage: PixSendMessage
-
-    @Mock
     private lateinit var createPixMapper: CreatePixMapper
 
     @InjectMocks
     private lateinit var dbCreatePix: DbCreatePixUseCase
 
-    @Test
-    fun shouldThrowIfPixRepositoryThrows() {
-        val localDateTime = LocalDateTime.now()
+    private val localDateTime = LocalDateTime.now()
 
-        val pixDto =
-                PixDto("id", "123", "321", BigDecimal("1.99"), localDateTime, PixDtoStatus.PENDING)
+    private val pixDto =
+        PixDto("id", "123", "321", BigDecimal("1.99"), localDateTime, PixDtoStatus.PENDING)
 
-        val createPix =
-                CreatePix("id", "123", "321", BigDecimal("1.99"), localDateTime, PixStatus.PENDING)
+    private val pix =
+        Pix("id", "123", "321", BigDecimal("1.99"), localDateTime, Status.PENDING)
 
-        given(createPixRepository.add(createPix)).willReturn(createPix)
-        given(createPixRepository.add(createPix)).willThrow(RuntimeException())
+    private val createPix =
+        CreatePix("id", "123", "321", BigDecimal("1.99"), localDateTime, PixStatus.PENDING)
 
-        assertThrows<RuntimeException> { dbCreatePix.create(pixDto) }
-
-        verifyNoInteractions(pixSendMessage);
-    }
 
     @Test
-    fun shouldThrowIfPixMessageThrows() {
-        val localDateTime = LocalDateTime.now()
-
-        val pixDto =
-                PixDto("id", "123", "321", BigDecimal("1.99"), localDateTime, PixDtoStatus.PENDING)
-
-        val message =
-                PixMessage("id", "123", "321", BigDecimal("1.99"), localDateTime, PixMessageStatus.PENDING)
-
-        given(pixSendMessage.send(message)).willThrow(RuntimeException())
-
-        assertThrows<RuntimeException> { dbCreatePix.create(pixDto) }
+    fun shouldThrowIfCreatePixThrows() {
+        given(createPixMapper.pixDtoToCreatePix(pixDto)).willReturn(createPix)
+        given(createPixRepository.add(createPix)).willThrow(IndexOutOfBoundsException())
+        assertThrows<IndexOutOfBoundsException> { dbCreatePix.create(pixDto) }
     }
 
     @Test
     fun shouldCallCreatePixAndSendMessageOnSuccess() {
-        val localDateTime = LocalDateTime.now()
-
-        val pixDto =
-                PixDto("id", "123", "321", BigDecimal("1.99"), localDateTime, PixDtoStatus.PENDING)
-
-        val pix = Pix("id", "123", "321", BigDecimal("1.99"), localDateTime, Status.PENDING)
-
-        val createPix =
-                CreatePix("id", "123", "321", BigDecimal("1.99"), localDateTime, PixStatus.PENDING)
-
-        val message =
-                PixMessage("id", "123", "321", BigDecimal("1.99"), localDateTime, PixMessageStatus.PENDING)
-
         given(createPixMapper.pixDtoToCreatePix(pixDto)).willReturn(createPix)
-        given(createPixMapper.pixDtoToPixMessage(pixDto)).willReturn(message)
-        given(createPixMapper.pixMessageToPix(message)).willReturn(pix)
-
+        given(createPixMapper.createPixToPix(createPix)).willReturn(pix)
         given(createPixRepository.add(createPix)).willReturn(createPix)
-        given(pixSendMessage.send(message)).willReturn(message)
 
-        val result = dbCreatePix.create(pixDto)
+        assertEquals(pix, dbCreatePix.create(pixDto))
 
-        assertEquals(pix, result)
         verify(createPixRepository).add(createPix);
-        verify(pixSendMessage).send(message);
-
         verify(createPixMapper).pixDtoToCreatePix(pixDto)
-        verify(createPixMapper).pixDtoToPixMessage(pixDto)
-        verify(createPixMapper).pixMessageToPix(message)
+        verify(createPixMapper).createPixToPix(createPix)
     }
 }

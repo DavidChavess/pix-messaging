@@ -30,5 +30,5 @@ class CreatePixConfig {
             createPixRepository: CreatePixRepository,
             pixSendMessage: PixSendMessage
     ): CreatePixUseCase =
-            DbCreatePixUseCase(createPixRepository, pixSendMessage, Mappers.getMapper(CreatePixMapper::class.java))
+            DbCreatePixUseCase(createPixRepository, Mappers.getMapper(CreatePixMapper::class.java))
 }
