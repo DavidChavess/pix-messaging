@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  k6:
+    image: grafana/k6
+    container_name: k6
+    ports:
+      - "6565:6565"
+    volumes:
+      - ./scripts:/scripts
+    network_mode: host
+    entrypoint: "k6 run /scripts/pix.js"
+
